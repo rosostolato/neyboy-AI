@@ -137,7 +137,7 @@ def loop(network):
 
         output = network.forward([ang, w])[0]
         print('ang: {} | w: {} | out: {}'
-            .format(round(ang, 2), round(w, 2), round(output, 2)))
+              .format(round(ang, 2), round(w, 2), round(output, 2)))
 
         if (output > 0.55):
             presskey(Key.right)
