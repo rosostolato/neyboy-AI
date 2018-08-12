@@ -70,23 +70,42 @@ class Pixel:
 
         return pixels
 
-    def findpixel(self, color: tuple, direction: float, distmax=100):
-        if (distmax == 0):
-            return None
+    def findpixel(self, color: tuple, direction: float, distmax=50):
+        x, y = self.x, self.y
 
-        xy = (self.x + int(round(math.cos(direction * math.pi/4))),
-              self.y - int(round(math.sin(direction * math.pi/4))))
+        while(distmax > 0):
+            xy = (x + int(round(math.cos(direction * math.pi/4))),
+                  y - int(round(math.sin(direction * math.pi/4))))
 
-        nextpix = Pixel(self._image, xy)
+            nextpix = Pixel(self._image, xy)
 
-        if (not nextpix.isvalid()):
-            return None
+            if (not nextpix.isvalid()):
+                return None
 
-        if (nextpix.getcolor() == color):
-            return nextpix
-        else:
+            if (nextpix.getcolor() == color):
+                return nextpix
+
             distmax -= 1
-            return nextpix.findpixel(color, direction, distmax)
+            x, y = xy
+
+        return None
+
+        # if (distmax == 0):
+        #     return None
+
+        # xy = (self.x + int(round(math.cos(direction * math.pi/4))),
+        #       self.y - int(round(math.sin(direction * math.pi/4))))
+
+        # nextpix = Pixel(self._image, xy)
+
+        # if (not nextpix.isvalid()):
+        #     return None
+
+        # if (nextpix.getcolor() == color):
+        #     return nextpix
+        # else:
+        #     distmax -= 1
+        #     return nextpix.findpixel(color, direction, distmax)
 
     def __repr__(self):
         return 'Pixel({}, {}) | Color{}'\

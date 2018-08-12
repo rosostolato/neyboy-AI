@@ -116,38 +116,36 @@ def presskey(key):
 
 def loop(network):
     global lastang
-    frame: Image = ImageGrab.grab(window.getbox())
-    neycrp = Pixel(frame, (350, 770))
 
-    if (gamestate(frame) == 'score'):
-        return
+    while (True):
+        frame: Image = ImageGrab.grab(window.getbox())
+        neycrp = Pixel(frame, (350, 770))
 
-    ang = calculate_angle(neycrp)
-    ang = normalize(ang, math.pi)
+        if (gamestate(frame) == 'score'):
+            return
 
-    # can't find ney
-    if (ang == 0):
-        return
+        ang = calculate_angle(neycrp)
+        ang = normalize(ang, math.pi)
 
-    w = ang - lastang
-    w = normalize(w, 0.2, -0.2)
+        # can't find ney
+        if (ang == 0):
+            return
+            frame.close()
 
-    output = network.forward([ang, w])[0]
-    print('ang: {} | w: {} | out: {}'
-          .format(round(ang, 2), round(w, 2), round(output, 2)))
+        w = ang - lastang
+        w = normalize(w, 0.2, -0.2)
 
-    if (output > 0.55):
-        presskey(Key.right)
-    if (output < 0.45):
-        presskey(Key.left)
+        output = network.forward([ang, w])[0]
+        print('ang: {} | w: {} | out: {}'
+            .format(round(ang, 2), round(w, 2), round(output, 2)))
 
-    # sleep for 10ms (MemoryError fix)
-    # sleep(0.01)
-    # close image, may it releases the memory
-    frame.close()
+        if (output > 0.55):
+            presskey(Key.right)
+        if (output < 0.45):
+            presskey(Key.left)
 
-    lastang = ang
-    loop(network)
+        lastang = ang
+        frame.close()
 
 
 def getparents(pop, scores):
@@ -160,42 +158,41 @@ def main():
     global gen
     global lastang
 
-    pop = genetic.population
-    scores = []
+    while (True):
+        pop = genetic.population
+        scores = []
 
-    for i in range(genomas):
-        print('Generation: {} | Genome: {}'.format(gen, i+1))
-        network = pop[i]
-        lastang = 0.5
+        for i in range(genomas):
+            print('Generation: {} | Genome: {}'.format(gen, i+1))
+            network = pop[i]
+            lastang = 0.5
 
-        while (gamestate() != 'ready'):
-            # print('Waiting for ready state')
-            pass
+            while (gamestate() != 'ready'):
+                # print('Waiting for ready state')
+                pass
 
-        presskey(Key.space)
+            presskey(Key.space)
 
-        pretime = time()
-        loop(network)
-        postime = time()
+            pretime = time()
+            loop(network)
+            postime = time()
 
-        scores.append(postime - pretime)
+            scores.append(postime - pretime)
 
-        while (gamestate() != 'score'):
-            # print('Waiting for score state')
-            pass
+            while (gamestate() != 'score'):
+                # print('Waiting for score state')
+                pass
 
-        mouse.click(Button.left)
-        sleep(1)
+            mouse.click(Button.left)
+            sleep(1)
 
-    father, mother = getparents(pop, scores)
-    genetic.renew_generation(father, mother)
-    gen += 1
+        father, mother = getparents(pop, scores)
+        genetic.renew_generation(father, mother)
+        gen += 1
 
-    with open(data_filename, 'wb') as filehandler:
-        pickle.dump([gen, father, mother], filehandler)
-        filehandler.close()
-
-    main()
+        with open(data_filename, 'wb') as filehandler:
+            pickle.dump([gen, father, mother], filehandler)
+            filehandler.close()
 
 
 main()
