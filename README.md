@@ -4,7 +4,7 @@ AI learns how to play Neyboy game: <https://neyboy.com.br/>
 
 ## Introduction
 
-This is a project used in one of my course ministrations. It's a simple implementation of an AI learning to play by itself.
+This is a project used in one of my course ministrations. It's a simple implementation of an AI learning how to play by itself.
 It uses a simple Neural Network with 2 inputs:
 
 * Character angle from 0.0 to 1.0 (left: 0.0; right: 1.0);
@@ -42,6 +42,6 @@ And in a terminal run the following command:
 python .\bot.py
 ```
 
-To make it running automatically, just let you mouse over the play button and it will fire click automatically.
+P.S. To make it running automatically, just let you mouse over the play button and it will fire click automatically.
 
 ![screenshot](./screenshot.png)
