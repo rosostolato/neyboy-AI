@@ -129,8 +129,8 @@ def loop(network):
 
         # can't find ney
         if (ang == 0):
-            return
             frame.close()
+            return
 
         w = ang - lastang
         w = normalize(w, 0.2, -0.2)
